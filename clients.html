@@ -201,6 +201,37 @@
     width:26px; height:26px; border-radius:50%; background:#84cc16; flex-shrink:0;
     display:inline-flex; align-items:center; justify-content:center;
   }
+
+  /* ── Responsive ── */
+  @media (max-width:1200px) {
+    .page { padding-left:24px; padding-right:24px; }
+  }
+  /* Step 1: hide Last Sign In */
+  @media (max-width:1024px) {
+    .data-table th:nth-child(6),.data-table td:nth-child(6) { display:none; }
+  }
+  /* Step 2: also hide Status */
+  @media (max-width:900px) {
+    .data-table th:nth-child(5),.data-table td:nth-child(5),
+    .data-table th:nth-child(6),.data-table td:nth-child(6) { display:none; }
+    .page { padding-left:24px; padding-right:24px; }
+  }
+  /* Step 3: also hide Sentiment */
+  @media (max-width:700px) {
+    .data-table th:nth-child(4),.data-table td:nth-child(4),
+    .data-table th:nth-child(5),.data-table td:nth-child(5),
+    .data-table th:nth-child(6),.data-table td:nth-child(6) { display:none; }
+    .page { padding-left:16px; padding-right:16px; }
+  }
+  /* Step 4: also hide Household → just Name + Kebab */
+  @media (max-width:480px) {
+    .data-table thead th:nth-child(1),
+    .data-table tbody tr:not(.tier-row) td:nth-child(1),
+    .data-table th:nth-child(3),.data-table td:nth-child(3),
+    .data-table th:nth-child(4),.data-table td:nth-child(4),
+    .data-table th:nth-child(5),.data-table td:nth-child(5),
+    .data-table th:nth-child(6),.data-table td:nth-child(6) { display:none; }
+  }
 </style>
 </head>
 <body>
