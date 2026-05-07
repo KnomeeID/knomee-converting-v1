@@ -31,22 +31,21 @@
   /* Nav */
   .top-nav {
     background:var(--purple-100); color:var(--white);
-    height:60px; padding:0 24px;
+    padding:16px 24px;
     display:flex; align-items:center; justify-content:space-between;
   }
-  .brand { display:flex; align-items:center; gap:10px; font-weight:600; }
-  .brand-logo {
-    width:24px; height:24px; border-radius:50%;
-    background:radial-gradient(circle at 30% 30%, #fff 0%, #d8b4fe 40%, var(--bolt) 80%);
-    box-shadow:inset 0 0 0 1px rgba(255,255,255,.6);
+  .brand { display:flex; align-items:center; gap:6px; }
+  .brand-wordmark { height:23px; width:126px; object-fit:contain; object-position:left center; flex-shrink:0; display:block; }
+  .brand .accent {
+    font-size:18.5px; font-weight:700; letter-spacing:-0.18px;
+    text-transform:uppercase; color:var(--white); margin-left:2px;
   }
-  .brand-name { font-size:18px; letter-spacing:.5px; }
-  .brand-name .accent { font-weight:600; margin-left:8px; opacity:.9; letter-spacing:1.5px; font-size:13px; }
-  .avatar-pic {
-    width:36px; height:36px; border-radius:50%;
-    background:linear-gradient(135deg,#f4a47b,#c97a4b);
-    box-shadow:inset 0 -10px 14px rgba(0,0,0,.08);
+  .hamburger-btn {
+    background:transparent; border:none; color:var(--white);
+    display:inline-flex; align-items:center; justify-content:center;
+    padding:4px; border-radius:6px; flex-shrink:0;
   }
+  .hamburger-btn:hover { background:rgba(255,255,255,.12); }
 
   /* Page */
   .page { max-width:1500px; margin:0 auto; padding:24px 60px 80px; background:var(--white); min-height:calc(100vh - 60px); }
@@ -194,10 +193,12 @@
 
 <header class="top-nav">
   <div class="brand">
-    <span class="brand-logo" aria-hidden="true"></span>
-    <span class="brand-name">knomee<span class="accent">ADVISOR</span></span>
+    <img class="brand-wordmark" src="https://www.figma.com/api/mcp/asset/92986684-82df-424e-b9b0-032d55be72ac" alt="knomee">
+    <span class="accent">ADVISOR</span>
   </div>
-  <div class="avatar-pic" aria-label="User profile"></div>
+  <button class="hamburger-btn" aria-label="Menu">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+  </button>
 </header>
 
 <main class="page">
@@ -310,7 +311,7 @@
         <td><span class="check"></span></td>
         <td>
           <div class="name-cell">
-            <div class="avatar photo"></div>
+            <div class="avatar">E</div>
             <div class="name-text">
               <div class="name-top"><a href="#" class="name-link">Emily Watson</a></div>
               <span class="email">emily.watson@email.com</span>

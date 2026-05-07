@@ -41,11 +41,12 @@
     font-size:18.5px; font-weight:700; letter-spacing:-0.18px;
     text-transform:uppercase; color:var(--white); margin-left:2px;
   }
-  .avatar-pic {
-    width:36px; height:36px; border-radius:50%;
-    overflow:hidden; flex-shrink:0;
+  .hamburger-btn {
+    background:transparent; border:none; color:var(--white);
+    display:inline-flex; align-items:center; justify-content:center;
+    padding:4px; border-radius:6px; flex-shrink:0;
   }
-  .avatar-pic img { width:100%; height:100%; object-fit:cover; border-radius:50%; }
+  .hamburger-btn:hover { background:rgba(255,255,255,.12); }
 
   /* Page container */
   .page { max-width:1500px; margin:0 auto; padding:24px 60px 80px; background:var(--white); min-height:calc(100vh - 60px); }
@@ -235,9 +236,9 @@
     <img class="brand-wordmark" src="https://www.figma.com/api/mcp/asset/92986684-82df-424e-b9b0-032d55be72ac" alt="knomee">
     <span class="accent">ADVISOR</span>
   </div>
-  <div class="avatar-pic" aria-label="User profile">
-    <img src="https://www.figma.com/api/mcp/asset/5f27e6b2-05ee-41f0-b921-37c1c97073e6" alt="User profile">
-  </div>
+  <button class="hamburger-btn" aria-label="Menu">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+  </button>
 </header>
 
 <main class="page">
@@ -310,7 +311,7 @@
         <td><span class="check"></span></td>
         <td>
           <div class="name-cell">
-            <div class="avatar photo" aria-hidden="true">S</div>
+            <div class="avatar" aria-hidden="true">S</div>
             <div class="name-text"><a href="#" class="name-link">Sarah Mitchell</a><span class="email">sara.mitchell@email.com</span></div>
           </div>
         </td>
