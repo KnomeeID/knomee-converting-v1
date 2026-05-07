@@ -60,9 +60,10 @@
   .tab {
     padding:14px 24px; font-size:16px; font-weight:600; color:var(--slate);
     cursor:pointer; border-bottom:2px solid transparent; margin-bottom:-1px;
-    letter-spacing:.5px;
+    letter-spacing:.5px; text-decoration:none; display:inline-block;
   }
   .tab.active { color:var(--purple-100); border-bottom-color:var(--purple-100); }
+  .tab:hover:not(.active) { color:#444; }
 
   /* Collapsible sections */
   .accordion {
@@ -243,8 +244,8 @@
   <h1 class="page-title">My Prospects</h1>
 
   <nav class="tabs">
-    <div class="tab active">Prospects</div>
-    <div class="tab">Clients</div>
+    <span class="tab active">Prospects</span>
+    <a href="clients.html" class="tab">Clients</a>
   </nav>
 
   <div class="accordion">
@@ -541,8 +542,7 @@
 
   document.getElementById('confirm-convert').addEventListener('click', () => {
     closeModal();
-    toast.classList.add('show');
-    setTimeout(() => toast.classList.remove('show'), 2400);
+    window.location.href = 'clients.html';
   });
 
   document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
