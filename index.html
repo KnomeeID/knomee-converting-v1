@@ -1,0 +1,247 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1200">
+<title>Knomee — Converting V1 prototype</title>
+<style>
+  :root { --accent:#5a2c8a; --bg:#1a0f2e; --panel:#fff; }
+  *,*::before,*::after { box-sizing:border-box; }
+  html,body { margin:0; padding:0; background:var(--bg); font:14px/1.4 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif; color:#eee; }
+  body { min-height:100vh; }
+
+  /* Top bar */
+  .toolbar {
+    position:fixed; top:0; left:0; right:0; height:44px;
+    display:flex; align-items:center; gap:16px; padding:0 16px;
+    background:rgba(20,10,40,.92); backdrop-filter:blur(8px);
+    border-bottom:1px solid rgba(255,255,255,.08);
+    z-index:1000; font-size:13px;
+  }
+  .toolbar .title { font-weight:600; }
+  .toolbar .spacer { flex:1; }
+  .toolbar select, .toolbar button {
+    background:#2a1a4a; color:#eee; border:1px solid rgba(255,255,255,.12);
+    padding:6px 10px; border-radius:6px; font:inherit; cursor:pointer;
+  }
+  .toolbar button:hover, .toolbar select:hover { background:#3a2560; }
+  .toolbar .badge { color:#aaa; font-size:12px; }
+  .toolbar kbd {
+    background:#2a1a4a; padding:1px 6px; border-radius:3px;
+    border:1px solid rgba(255,255,255,.15); font-size:11px;
+  }
+
+  /* Stage */
+  .stage {
+    padding:60px 16px 40px;
+    display:flex; justify-content:center;
+  }
+  .frame {
+    position:relative; display:none; max-width:1200px; width:100%;
+    background:#fff; border-radius:8px; overflow:hidden;
+    box-shadow:0 24px 60px rgba(0,0,0,.5);
+  }
+  .frame.active { display:block; }
+  .frame img { display:block; width:100%; height:auto; user-select:none; -webkit-user-drag:none; }
+
+  /* Hotspots */
+  .hotspot {
+    position:absolute; cursor:pointer; border-radius:6px;
+    background:transparent; transition:background .15s, outline .15s;
+  }
+  .hotspot:hover { background:rgba(90,44,138,.18); outline:2px solid var(--accent); }
+  body.hint .hotspot {
+    background:rgba(90,44,138,.18);
+    outline:2px dashed rgba(90,44,138,.6);
+    animation:pulse 1.6s ease-in-out infinite;
+  }
+  @keyframes pulse { 0%,100%{outline-color:rgba(90,44,138,.4);} 50%{outline-color:rgba(90,44,138,.9);} }
+
+  /* Toast for confetti screen auto-advance hint */
+  .auto-hint {
+    position:absolute; left:50%; bottom:20px; transform:translateX(-50%);
+    background:rgba(0,0,0,.7); color:#fff; padding:8px 14px;
+    border-radius:20px; font-size:12px; pointer-events:none;
+    opacity:0; transition:opacity .3s;
+  }
+  .frame.active .auto-hint.show { opacity:1; }
+
+  /* Help modal */
+  .help-overlay {
+    position:fixed; inset:0; background:rgba(0,0,0,.6); display:none;
+    align-items:center; justify-content:center; z-index:2000; padding:20px;
+  }
+  .help-overlay.open { display:flex; }
+  .help-card {
+    background:#1f1335; padding:28px; border-radius:12px; max-width:520px;
+    border:1px solid rgba(255,255,255,.12); color:#eee;
+  }
+  .help-card h2 { margin:0 0 12px; font-size:18px; }
+  .help-card p, .help-card li { font-size:13px; color:#ccc; line-height:1.6; }
+  .help-card ul { padding-left:20px; }
+  .help-card .close {
+    margin-top:16px; background:var(--accent); color:#fff; border:none;
+    padding:8px 16px; border-radius:6px; cursor:pointer; font:inherit;
+  }
+</style>
+</head>
+<body>
+
+<div class="toolbar">
+  <span class="title">Knomee · Converting V1</span>
+  <span class="badge" id="screen-label">Screen 1 of 7</span>
+  <span class="spacer"></span>
+  <select id="jump" title="Jump to screen">
+    <option value="prospects">1. Prospects Dashboard</option>
+    <option value="modal">2. Confirmation Modal</option>
+    <option value="clients-confetti">3. Clients (just converted)</option>
+    <option value="clients">4. Clients Dashboard</option>
+    <option value="file-idle">5. Prospect File · idle</option>
+    <option value="file-hover">6. Prospect File · hover</option>
+    <option value="file-active">7. Prospect File · active</option>
+  </select>
+  <button id="hint-btn" title="Toggle hotspots (H)">Show hotspots</button>
+  <button id="help-btn" title="About this prototype (?)">?</button>
+</div>
+
+<div class="stage">
+
+  <!-- 1. Prospects Dashboard -->
+  <div class="frame" data-screen="prospects">
+    <img src="screens/01-prospects-dashboard.png" alt="Prospects Dashboard">
+    <!-- Clients tab in subnav -->
+    <a class="hotspot" data-go="clients" style="left:8.7%; top:4.2%; width:5.5%; height:2.4%;" title="Go to Clients tab"></a>
+    <!-- Sarah Mitchell name → her file -->
+    <a class="hotspot" data-go="file-idle" style="left:9.3%; top:11.0%; width:11%; height:2.4%;" title="Open Sarah Mitchell"></a>
+    <!-- Visible "Convert to Client" floating menu on her row -->
+    <a class="hotspot" data-go="modal" style="left:84%; top:13.8%; width:11%; height:3.0%;" title="Convert to Client"></a>
+    <!-- Backup wider hotspot on the action area in case the floating tip is hard to hit -->
+    <a class="hotspot" data-go="modal" style="left:80%; top:10.5%; width:6%; height:3.5%;" title="Convert to Client"></a>
+  </div>
+
+  <!-- 2. Confirmation Modal -->
+  <div class="frame" data-screen="modal">
+    <img src="screens/02-confirmation-modal.png" alt="Confirmation Modal">
+    <!-- Close × -->
+    <a class="hotspot" data-go="prospects" style="left:62.5%; top:14.5%; width:2.2%; height:1.8%;" title="Close"></a>
+    <!-- Cancel button -->
+    <a class="hotspot" data-go="prospects" style="left:42.5%; top:19.7%; width:8%; height:2.6%;" title="Cancel"></a>
+    <!-- Convert button -->
+    <a class="hotspot" data-go="clients-confetti" style="left:51%; top:19.7%; width:8%; height:2.6%;" title="Convert"></a>
+  </div>
+
+  <!-- 3. Clients Dashboard with confetti (just converted) -->
+  <div class="frame" data-screen="clients-confetti">
+    <img src="screens/03-clients-dashboard-a.png" alt="Clients Dashboard with confetti">
+    <!-- Prospects tab back -->
+    <a class="hotspot" data-go="prospects" style="left:7.5%; top:7.5%; width:6.5%; height:3%;" title="Back to Prospects"></a>
+    <!-- Click anywhere advance -->
+    <a class="hotspot" data-go="clients" style="left:0; top:18%; right:0; width:100%; height:80%;" title="Continue"></a>
+    <div class="auto-hint show">Auto-advancing… click anywhere to continue</div>
+  </div>
+
+  <!-- 4. Clients Dashboard (settled) -->
+  <div class="frame" data-screen="clients">
+    <img src="screens/04-clients-dashboard-b.png" alt="Clients Dashboard">
+    <!-- Prospects tab -->
+    <a class="hotspot" data-go="prospects" style="left:7.5%; top:7.5%; width:6.5%; height:3%;" title="Back to Prospects"></a>
+    <!-- Sarah Mitchell row → her file -->
+    <a class="hotspot" data-go="file-idle" style="left:13.5%; top:30%; width:14%; height:2.5%;" title="Open Sarah Mitchell"></a>
+  </div>
+
+  <!-- 5. Prospect File — idle -->
+  <div class="frame" data-screen="file-idle">
+    <img src="screens/05-prospect-file-idle.png" alt="Prospect File (idle)">
+    <!-- Logo / back to prospects -->
+    <a class="hotspot" data-go="prospects" style="left:0.5%; top:0.4%; width:6%; height:1.6%;" title="Back to Prospects"></a>
+    <!-- Convert to Client sidebar button: hover then active -->
+    <a class="hotspot" data-go="file-hover" style="left:1%; top:4.5%; width:11%; height:1.4%;" title="Hover Convert to Client"></a>
+  </div>
+
+  <!-- 6. Prospect File — hover -->
+  <div class="frame" data-screen="file-hover">
+    <img src="screens/06-prospect-file-hover.png" alt="Prospect File (hover)">
+    <a class="hotspot" data-go="prospects" style="left:0.5%; top:0.4%; width:6%; height:1.6%;" title="Back to Prospects"></a>
+    <a class="hotspot" data-go="file-active" style="left:1%; top:4.5%; width:11%; height:1.4%;" title="Press Convert to Client"></a>
+  </div>
+
+  <!-- 7. Prospect File — active -->
+  <div class="frame" data-screen="file-active">
+    <img src="screens/07-prospect-file-active.png" alt="Prospect File (active / pressed)">
+    <a class="hotspot" data-go="prospects" style="left:0.5%; top:0.4%; width:6%; height:1.6%;" title="Back to Prospects"></a>
+    <a class="hotspot" data-go="modal" style="left:1%; top:4.5%; width:11%; height:1.4%;" title="Open Convert dialog"></a>
+  </div>
+
+</div>
+
+<div class="help-overlay" id="help">
+  <div class="help-card">
+    <h2>Knomee · Converting V1 prototype</h2>
+    <p>Click-through prototype generated from the Figma "Converting V1" section. Use it to walk stakeholders through the prospect-to-client conversion flow.</p>
+    <ul>
+      <li><b>Show hotspots</b> reveals every clickable area</li>
+      <li><b>Jump to screen</b> picks any screen directly</li>
+      <li><kbd>H</kbd> toggle hotspots · <kbd>?</kbd> this help · <kbd>←</kbd> back · <kbd>→</kbd> next</li>
+    </ul>
+    <p><b>Suggested demo flow:</b> Prospects → click the "Convert to Client" tooltip on Sarah Mitchell's row → Convert → watch the confetti land on the Clients dashboard.</p>
+    <button class="close" onclick="document.getElementById('help').classList.remove('open')">Got it</button>
+  </div>
+</div>
+
+<script>
+  const order = ['prospects','modal','clients-confetti','clients','file-idle','file-hover','file-active'];
+  const labels = {
+    'prospects':'1. Prospects Dashboard',
+    'modal':'2. Confirmation Modal',
+    'clients-confetti':'3. Clients (just converted)',
+    'clients':'4. Clients Dashboard',
+    'file-idle':'5. Prospect File · idle',
+    'file-hover':'6. Prospect File · hover',
+    'file-active':'7. Prospect File · active',
+  };
+
+  let autoTimer = null;
+
+  function show(name) {
+    if (!order.includes(name)) name = 'prospects';
+    document.querySelectorAll('.frame').forEach(f => f.classList.toggle('active', f.dataset.screen === name));
+    document.getElementById('jump').value = name;
+    const idx = order.indexOf(name);
+    document.getElementById('screen-label').textContent = `Screen ${idx+1} of ${order.length} · ${labels[name].replace(/^\d+\.\s*/, '')}`;
+    history.replaceState(null, '', '#' + name);
+    window.scrollTo({top:0, behavior:'instant'});
+
+    clearTimeout(autoTimer);
+    if (name === 'clients-confetti') {
+      autoTimer = setTimeout(() => show('clients'), 2800);
+    }
+  }
+
+  document.body.addEventListener('click', e => {
+    const h = e.target.closest('.hotspot');
+    if (!h) return;
+    e.preventDefault();
+    show(h.dataset.go);
+  });
+
+  document.getElementById('jump').addEventListener('change', e => show(e.target.value));
+  document.getElementById('hint-btn').addEventListener('click', () => {
+    document.body.classList.toggle('hint');
+    document.getElementById('hint-btn').textContent = document.body.classList.contains('hint') ? 'Hide hotspots' : 'Show hotspots';
+  });
+  document.getElementById('help-btn').addEventListener('click', () => document.getElementById('help').classList.toggle('open'));
+
+  document.addEventListener('keydown', e => {
+    if (e.target.tagName === 'SELECT' || e.target.tagName === 'INPUT') return;
+    const cur = order.indexOf((location.hash || '#prospects').slice(1));
+    if (e.key === 'ArrowLeft' && cur > 0) show(order[cur-1]);
+    else if (e.key === 'ArrowRight' && cur < order.length-1) show(order[cur+1]);
+    else if (e.key === 'h' || e.key === 'H') document.getElementById('hint-btn').click();
+    else if (e.key === '?') document.getElementById('help-btn').click();
+    else if (e.key === 'Escape') document.getElementById('help').classList.remove('open');
+  });
+
+  show((location.hash || '#prospects').slice(1));
+</script>
+</body>
+</html>
