@@ -96,7 +96,7 @@
   .btn svg { width:16px; height:16px; }
 
   /* Table */
-  .data-table { width:100%; border-collapse:collapse; font-size:14px; table-layout:fixed; }
+  .data-table { width:100%; border-collapse:collapse; font-size:14px; }
   .data-table thead th {
     text-align:left; font-weight:600; color:var(--slate); padding:14px 12px;
     border-bottom:1px solid var(--pearl); background:#fafafa;
@@ -219,8 +219,8 @@
     height:auto; padding:12px 24px; border-radius:67px;
     font-size:18px; font-weight:600; letter-spacing:.09px; border:2px solid var(--purple-100);
   }
-  .modal .btn:not(.btn-primary) { background:var(--white); color:var(--purple-100); }
-  .modal .btn:not(.btn-primary):hover { background:#f3eaf9; }
+  .modal .btn:not(.btn-primary) { background:var(--white); color:#a56ccc; border-color:#a56ccc; }
+  .modal .btn:not(.btn-primary):hover { background:#f9f0fd; border-color:#7639a1; color:#7639a1; }
   .modal .btn-primary { background:var(--purple-100); color:var(--white); border-color:var(--purple-100); }
   .modal .btn-primary:hover { background:#a56ccc; border-color:#a56ccc; }
 
@@ -342,26 +342,14 @@
   </div>
 
   <table class="data-table">
-    <colgroup>
-      <col style="width:40px">
-      <col>
-      <col style="width:72px">
-      <col style="width:80px">
-      <col style="width:80px">
-      <col style="width:80px">
-      <col style="width:88px">
-      <col>
-      <col style="width:130px">
-      <col style="width:48px">
-    </colgroup>
     <thead>
       <tr>
-        <th><span class="check"></span></th>
+        <th style="width:40px"><span class="check"></span></th>
         <th>Name</th>
         <th class="sortable">KQ Score <span class="sort-arrow">▲</span></th>
-        <th>Intent</th>
-        <th>Clarity</th>
-        <th>Receptivity</th>
+        <th style="width:90px">Intent</th>
+        <th style="width:90px">Clarity</th>
+        <th style="width:90px">Receptivity</th>
         <th>Sign Up</th>
         <th>Top Action</th>
         <th style="white-space:nowrap;">Convert to Client</th>
