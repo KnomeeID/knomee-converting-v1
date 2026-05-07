@@ -103,6 +103,12 @@
   }
   .data-table th.sortable { cursor:pointer; }
   .data-table th .sort-arrow { display:inline-block; margin-left:4px; font-size:10px; }
+  /* Intent, Clarity, Receptivity — equal width, centered */
+  .data-table th:nth-child(4),.data-table td:nth-child(4),
+  .data-table th:nth-child(5),.data-table td:nth-child(5),
+  .data-table th:nth-child(6),.data-table td:nth-child(6) {
+    width:90px; text-align:center;
+  }
   .data-table td { padding:18px 12px; vertical-align:middle; }
   .data-table tbody tr { border-bottom:1px solid var(--pearl); }
   .data-table tbody tr:hover { background:#fafafa; }
