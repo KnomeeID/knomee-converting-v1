@@ -2,134 +2,550 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=1100">
-<title>Knomee — Convert prototype</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Knomee · My Prospects</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
+  :root {
+    --purple-100:#240446;
+    --ocean:#086375;
+    --steel:#6ba1ac;
+    --lilac:#b98ddc;
+    --lilac-soft:#d4b3eb;
+    --mint:#c0ffe7;
+    --slate:#757575;
+    --ash:#afafaf;
+    --pearl:#eeeeee;
+    --stone:#cccccc;
+    --bolt:#a855f7;
+    --bolt-deep:#7c3aed;
+    --black:#000;
+    --white:#fff;
+  }
   *,*::before,*::after { box-sizing:border-box; }
-  html,body { margin:0; padding:0; background:#1a0f2e; font:14px/1.4 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif; color:#eee; }
+  html,body { margin:0; padding:0; background:#f5f5f7; font-family:"Poppins",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; color:#1a1a1a; }
+  a { color:inherit; text-decoration:none; }
+  button { font-family:inherit; cursor:pointer; }
 
-  .stage {
-    padding:24px 16px 60px;
-    display:flex; justify-content:center;
+  /* Top nav */
+  .top-nav {
+    background:var(--purple-100); color:var(--white);
+    height:60px; padding:0 24px;
+    display:flex; align-items:center; justify-content:space-between;
+  }
+  .brand { display:flex; align-items:center; gap:10px; font-weight:600; }
+  .brand-logo {
+    width:24px; height:24px; border-radius:50%;
+    background:radial-gradient(circle at 30% 30%, #fff 0%, #d8b4fe 40%, var(--bolt) 80%);
+    box-shadow:inset 0 0 0 1px rgba(255,255,255,.6);
+  }
+  .brand-name { font-size:18px; letter-spacing:.5px; }
+  .brand-name .accent { font-weight:600; margin-left:8px; opacity:.9; letter-spacing:1.5px; font-size:13px; }
+  .avatar-pic {
+    width:36px; height:36px; border-radius:50%;
+    background:linear-gradient(135deg,#f4a47b,#c97a4b);
+    box-shadow:inset 0 -10px 14px rgba(0,0,0,.08);
   }
 
-  .frame {
-    position:relative; width:100%; max-width:1100px;
-    background:#fff; border-radius:8px; overflow:hidden;
-    box-shadow:0 24px 60px rgba(0,0,0,.5);
-  }
-  .frame img.dashboard { display:block; width:100%; height:auto; user-select:none; -webkit-user-drag:none; }
+  /* Page container */
+  .page { max-width:1500px; margin:0 auto; padding:24px 60px 80px; background:var(--white); min-height:calc(100vh - 60px); }
 
-  /* Hotspot on Sarah's ⚡ button. Frame is 1728×2657. ⚡ icon at x 1466–1506, y 641.87–683.58. */
-  .bolt-hotspot {
-    position:absolute;
-    left:84.84%; top:24.16%; width:2.31%; height:1.58%;
-    cursor:pointer; border-radius:6px;
-    background:transparent; transition:background .15s, outline .15s;
-  }
-  .bolt-hotspot:hover { background:rgba(90,44,138,.18); outline:2px solid #5a2c8a; }
-  body.hint .bolt-hotspot {
-    background:rgba(90,44,138,.22);
-    outline:2px dashed rgba(90,44,138,.85);
-    animation:pulse 1.6s ease-in-out infinite;
-  }
-  @keyframes pulse { 0%,100%{outline-color:rgba(90,44,138,.4);} 50%{outline-color:rgba(90,44,138,.95);} }
+  /* Page title */
+  .page-title { font-size:36px; font-weight:600; line-height:1.2; letter-spacing:-1px; color:var(--purple-100); margin:0 0 24px; }
 
-  /* Modal overlay — centered on the frame, hidden by default */
-  .modal-overlay {
-    position:absolute; inset:0;
-    display:none; align-items:center; justify-content:center;
-    background:rgba(20,10,40,.45);
-    z-index:50;
+  /* Tabs */
+  .tabs { display:flex; gap:0; border-bottom:1px solid var(--pearl); margin-bottom:24px; }
+  .tab {
+    padding:14px 24px; font-size:16px; font-weight:600; color:var(--slate);
+    cursor:pointer; border-bottom:2px solid transparent; margin-bottom:-1px;
+    letter-spacing:.5px;
   }
-  .modal-overlay.open { display:flex; }
-  .modal-card {
-    width:30%; min-width:360px; max-width:500px;
-    aspect-ratio:500/238;
-    box-shadow:0 20px 50px rgba(0,0,0,.35);
-    border-radius:8px; overflow:hidden;
-    background:#fff;
+  .tab.active { color:var(--purple-100); border-bottom-color:var(--purple-100); }
+
+  /* Collapsible sections */
+  .accordion {
+    border:1px solid var(--pearl); border-radius:8px; padding:14px 20px;
+    display:flex; align-items:center; justify-content:space-between; margin-bottom:12px;
+    background:#fafafa; cursor:pointer; user-select:none;
+  }
+  .accordion-left { display:flex; align-items:center; gap:10px; font-weight:600; font-size:15px; }
+  .accordion-icon { width:18px; height:18px; display:inline-flex; align-items:center; justify-content:center; }
+  .accordion-right { display:flex; align-items:center; gap:8px; color:var(--slate); font-size:12px; letter-spacing:1px; }
+  .chevron { width:14px; height:14px; }
+
+  /* Search row */
+  .search-row { display:flex; gap:12px; align-items:center; margin:24px 0 16px; }
+  .search-input {
+    flex:1; max-width:280px; height:44px; padding:0 14px 0 14px;
+    border:1px solid var(--pearl); border-radius:8px; background:var(--white);
+    font:14px/1.5 "Poppins",sans-serif; color:var(--slate);
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23afafaf' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='11' cy='11' r='8'/><path d='m21 21-4.3-4.3'/></svg>");
+    background-repeat:no-repeat; background-position:right 14px center; background-size:18px;
+    padding-right:42px;
+  }
+  .actions-right { margin-left:auto; display:flex; gap:12px; }
+  .btn {
+    height:44px; padding:0 20px; border-radius:8px; border:1px solid var(--pearl);
+    background:var(--white); color:var(--purple-100); font-size:14px; font-weight:600;
+    display:inline-flex; align-items:center; gap:8px;
+  }
+  .btn-primary { background:var(--purple-100); color:var(--white); border-color:var(--purple-100); }
+  .btn:hover { filter:brightness(.95); }
+  .btn svg { width:16px; height:16px; }
+
+  /* Table */
+  .data-table { width:100%; border-collapse:collapse; font-size:14px; }
+  .data-table thead th {
+    text-align:left; font-weight:600; color:var(--slate); padding:14px 12px;
+    border-bottom:1px solid var(--pearl); background:#fafafa;
+  }
+  .data-table th.sortable { cursor:pointer; }
+  .data-table th .sort-arrow { display:inline-block; margin-left:4px; font-size:10px; }
+  .data-table td { padding:18px 12px; vertical-align:middle; }
+  .data-table tbody tr { border-bottom:1px solid var(--pearl); }
+  .data-table tbody tr:hover { background:#fafafa; }
+
+  /* Tier banner row */
+  .tier-row td {
+    padding:8px 16px; font-size:11px; font-weight:600; letter-spacing:1.6px; color:var(--white);
+  }
+  .tier-row.tier-1 td { background:var(--ocean); }
+  .tier-row.tier-2 td { background:var(--steel); }
+  .tier-row.tier-3 td { background:var(--lilac-soft); color:var(--purple-100); }
+  .tier-row.incomplete td { background:var(--pearl); color:var(--slate); }
+  .tier-row .tier-meta { float:right; opacity:.95; }
+
+  /* Cell pieces */
+  .check { width:16px; height:16px; border:1.5px solid var(--stone); border-radius:3px; display:inline-block; vertical-align:middle; cursor:pointer; }
+  .name-cell { display:flex; align-items:center; gap:12px; }
+  .avatar {
+    width:40px; height:40px; border-radius:50%;
+    background:var(--pearl); color:var(--slate);
+    display:inline-flex; align-items:center; justify-content:center;
+    font-weight:600; font-size:16px; flex-shrink:0;
+  }
+  .avatar.photo {
+    background:linear-gradient(135deg,#f4d4ba,#e8b990);
+    color:transparent;
+  }
+  .name-text { display:flex; flex-direction:column; }
+  .name-link { color:var(--purple-100); font-weight:500; display:inline-flex; align-items:center; gap:4px; }
+  .name-link::after { content:"›"; color:var(--purple-100); font-weight:600; }
+  .email { color:var(--slate); font-size:12px; }
+
+  .kq-badge {
+    display:inline-flex; align-items:center; justify-content:center;
+    min-width:50px; height:36px; padding:0 14px; border-radius:8px;
+    font-weight:700; font-size:18px; color:var(--white);
+  }
+  .kq-1 { background:var(--ocean); }
+  .kq-2 { background:var(--steel); }
+  .kq-3 { background:var(--lilac); }
+
+  .num { color:#1a1a1a; }
+  .date { color:#1a1a1a; }
+  .top-action { color:#1a1a1a; line-height:1.5; max-width:380px; }
+  .last-invited { font-size:12px; color:var(--slate); }
+  .last-invited b { display:block; color:#1a1a1a; font-size:14px; font-weight:500; }
+
+  /* Bolt action button */
+  .bolt-btn {
+    width:40px; height:40px; border-radius:8px; border:none;
+    background:var(--bolt); color:var(--white);
+    display:inline-flex; align-items:center; justify-content:center;
+    box-shadow:0 1px 0 rgba(0,0,0,.04);
+    transition:background .15s, transform .1s;
     position:relative;
   }
-  .modal-card img { width:100%; height:auto; display:block; pointer-events:none; }
+  .bolt-btn:hover { background:var(--bolt-deep); }
+  .bolt-btn:active { transform:scale(.96); }
+  .bolt-btn.disabled { background:var(--pearl); color:var(--ash); pointer-events:none; }
+  .bolt-btn svg { width:18px; height:18px; }
+  .bolt-btn::after {
+    content:attr(data-tip);
+    position:absolute; right:calc(100% + 8px); top:50%; transform:translateY(-50%);
+    background:#1a1a1a; color:#fff; font-size:12px; font-weight:500;
+    padding:6px 10px; border-radius:4px; white-space:nowrap;
+    opacity:0; pointer-events:none; transition:opacity .15s;
+  }
+  .bolt-btn:hover::after { opacity:1; }
 
-  /* Modal hotspots — % of modal card 500x238 */
-  .modal-card .hot {
-    position:absolute; cursor:pointer; border-radius:6px;
-    transition:background .15s;
+  /* Kebab */
+  .kebab {
+    width:36px; height:36px; border-radius:50%; border:none; background:transparent;
+    color:var(--ash); display:inline-flex; align-items:center; justify-content:center;
   }
-  .modal-card .hot:hover { background:rgba(90,44,138,.12); }
-  body.hint .modal-card .hot {
-    background:rgba(90,44,138,.14);
-    outline:1px dashed rgba(90,44,138,.85);
-  }
+  .kebab:hover { background:var(--pearl); color:var(--slate); }
 
-  /* Tiny floating help button */
-  .hint-toggle {
-    position:fixed; right:16px; bottom:16px; z-index:1000;
-    background:#5a2c8a; color:#fff; border:none;
-    padding:8px 14px; border-radius:24px; cursor:pointer;
-    font:inherit; box-shadow:0 6px 20px rgba(0,0,0,.4);
+  /* Modal */
+  .modal-backdrop {
+    position:fixed; inset:0; background:rgba(36,4,70,.4);
+    display:none; align-items:center; justify-content:center;
+    z-index:100; padding:20px;
   }
-  .hint-toggle:hover { background:#6e3aa6; }
+  .modal-backdrop.open { display:flex; animation:fade-in .15s ease-out; }
+  @keyframes fade-in { from { opacity:0; } to { opacity:1; } }
+  .modal {
+    width:500px; max-width:100%; background:var(--white); border-radius:12px;
+    box-shadow:0 24px 60px rgba(0,0,0,.25); overflow:hidden;
+    animation:scale-in .15s ease-out;
+  }
+  @keyframes scale-in { from { transform:scale(.96); opacity:0; } to { transform:scale(1); opacity:1; } }
+  .modal-header {
+    display:flex; align-items:center; justify-content:space-between;
+    padding:18px 24px; border-bottom:1px solid var(--pearl);
+  }
+  .modal-title { font-size:20px; font-weight:600; color:var(--purple-100); }
+  .modal-close {
+    width:24px; height:24px; border:none; background:transparent;
+    display:inline-flex; align-items:center; justify-content:center; color:var(--slate);
+    border-radius:4px;
+  }
+  .modal-close:hover { background:var(--pearl); }
+  .modal-body { padding:20px 24px; color:#1a1a1a; font-size:14px; line-height:1.5; }
+  .modal-footer {
+    display:flex; gap:12px; justify-content:flex-end;
+    padding:0 24px 24px;
+  }
+  .modal .btn { height:40px; padding:0 22px; }
+  .modal .btn-primary:hover { background:#3d0a73; }
+
+  /* Toast */
+  .toast {
+    position:fixed; top:20px; right:20px; z-index:200;
+    background:var(--white); border:1px solid var(--pearl);
+    border-radius:8px; box-shadow:0 8px 24px rgba(0,0,0,.12);
+    padding:14px 18px; display:none; align-items:center; gap:10px;
+    font-size:14px; font-weight:500;
+    animation:slide-in .25s ease-out;
+  }
+  .toast.show { display:flex; }
+  @keyframes slide-in { from { opacity:0; transform:translateY(-8px); } to { opacity:1; transform:translateY(0); } }
+  .toast-check {
+    width:20px; height:20px; border-radius:50%; background:#22c55e; color:#fff;
+    display:inline-flex; align-items:center; justify-content:center; font-size:13px;
+  }
 </style>
 </head>
 <body>
 
-<div class="stage">
-  <div class="frame">
-    <img class="dashboard" src="screens/dashboard.png" alt="Prospects Dashboard">
-    <a class="bolt-hotspot" id="bolt" title="Convert Sarah Mitchell"></a>
+<header class="top-nav">
+  <div class="brand">
+    <span class="brand-logo" aria-hidden="true"></span>
+    <span class="brand-name">knomee<span class="accent">ADVISOR</span></span>
+  </div>
+  <div class="avatar-pic" aria-label="User profile"></div>
+</header>
 
-    <div class="modal-overlay" id="modal" aria-hidden="true">
-      <div class="modal-card" role="dialog" aria-label="Convert to Client">
-        <img src="screens/modal.png" alt="Convert to Client">
-        <!--
-          Modal is 500x238. Internal positions:
-          - Close X: instance at (454.4, 7.2) inside Frame at y=12 → absolute (454.4, 19.2), size 21.6x21.6
-          - Cancel button: Frame 1171276946 at (228, 0) inside Frame 1171277310 at y=29 inside Frame 1171277516 at y=129
-            → absolute (228, 158), size 114x51
-          - Convert button: Frame 1171276945 at (354, 0) inside same parent → absolute (354, 158), size 122x51
-        -->
-        <a class="hot" id="modal-close"
-           style="left:90.88%; top:8.07%; width:4.32%; height:9.07%;" title="Close"></a>
-        <a class="hot" data-close
-           style="left:45.6%; top:66.4%; width:22.8%; height:21.4%;" title="Cancel"></a>
-        <a class="hot" data-close
-           style="left:70.8%; top:66.4%; width:24.4%; height:21.4%;" title="Convert"></a>
-      </div>
+<main class="page">
+  <h1 class="page-title">My Prospects</h1>
+
+  <nav class="tabs">
+    <div class="tab active">Prospects</div>
+    <div class="tab">Clients</div>
+  </nav>
+
+  <div class="accordion">
+    <div class="accordion-left">
+      <span class="accordion-icon" aria-hidden="true">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#086375" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+      </span>
+      <span>Top Line Metrics</span>
+    </div>
+    <div class="accordion-right">
+      <span>SHOW MORE</span>
+      <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+    </div>
+  </div>
+
+  <div class="accordion">
+    <div class="accordion-left">
+      <span class="accordion-icon" aria-hidden="true">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="#a855f7" stroke="none"><polygon points="13,2 3,14 12,14 11,22 21,10 12,10"/></svg>
+      </span>
+      <span>Actionable Insights</span>
+    </div>
+    <div class="accordion-right">
+      <span>SHOW MORE</span>
+      <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+    </div>
+  </div>
+
+  <div class="search-row">
+    <input class="search-input" placeholder="Search name">
+    <div class="actions-right">
+      <button class="btn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Download
+      </button>
+      <button class="btn btn-primary">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Invite
+      </button>
+    </div>
+  </div>
+
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th style="width:40px"><span class="check"></span></th>
+        <th>Name</th>
+        <th class="sortable">KQ Score <span class="sort-arrow">▲</span></th>
+        <th>Intent</th>
+        <th>Clarity</th>
+        <th>Receptivity</th>
+        <th>Sign Up</th>
+        <th>Top Action</th>
+        <th></th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- TIER 1 -->
+      <tr class="tier-row tier-1"><td colspan="10">TIER 1 — READY NOW <span class="tier-meta">70-100 KQ</span></td></tr>
+      <tr>
+        <td><span class="check"></span></td>
+        <td>
+          <div class="name-cell">
+            <div class="avatar photo" aria-hidden="true">S</div>
+            <div class="name-text"><a href="#" class="name-link">Sarah Mitchell</a><span class="email">sara.mitchell@email.com</span></div>
+          </div>
+        </td>
+        <td><span class="kq-badge kq-1">81</span></td>
+        <td class="num">83</td>
+        <td class="num">62</td>
+        <td class="num">100</td>
+        <td class="date">06/05/2025</td>
+        <td class="top-action">Call now — "worked since 13, ready for adventures"; lead with Future You vision</td>
+        <td><button class="bolt-btn" id="convert-sarah" data-tip="Convert Sarah Mitchell" aria-label="Convert to Client">
+          <svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="13,2 3,14 12,14 11,22 21,10 12,10"/></svg>
+        </button></td>
+        <td><button class="kebab" aria-label="More options">⋯</button></td>
+      </tr>
+      <tr>
+        <td><span class="check"></span></td>
+        <td>
+          <div class="name-cell">
+            <div class="avatar">E</div>
+            <div class="name-text"><a href="#" class="name-link">Emma Rossi</a><span class="email">emma.rossi@beaconplan.co</span></div>
+          </div>
+        </td>
+        <td><span class="kq-badge kq-1">88</span></td>
+        <td class="num">86</td><td class="num">90</td><td class="num">88</td>
+        <td class="date">06/05/2025</td>
+        <td class="top-action">Urgent personal circumstances (caregiving); call to discuss home & estate plan</td>
+        <td><button class="bolt-btn" data-tip="Convert Emma Rossi"><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="13,2 3,14 12,14 11,22 21,10 12,10"/></svg></button></td>
+        <td><button class="kebab">⋯</button></td>
+      </tr>
+      <tr>
+        <td><span class="check"></span></td>
+        <td>
+          <div class="name-cell">
+            <div class="avatar">J</div>
+            <div class="name-text"><a href="#" class="name-link">Jorday Ray</a><span class="email">jorday.ray@email.com</span></div>
+          </div>
+        </td>
+        <td><span class="kq-badge kq-1">76</span></td>
+        <td class="num">80</td><td class="num">74</td><td class="num">74</td>
+        <td class="date">06/05/2025</td>
+        <td class="top-action">Family legacy is their stated #1 life goal; lead with generational wealth</td>
+        <td><button class="bolt-btn" data-tip="Convert Jorday Ray"><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="13,2 3,14 12,14 11,22 21,10 12,10"/></svg></button></td>
+        <td><button class="kebab">⋯</button></td>
+      </tr>
+
+      <!-- TIER 2 -->
+      <tr class="tier-row tier-2"><td colspan="10">TIER 2 — CONSIDERING <span class="tier-meta">40-69 KQ</span></td></tr>
+      <tr>
+        <td><span class="check"></span></td>
+        <td>
+          <div class="name-cell">
+            <div class="avatar">B</div>
+            <div class="name-text"><a href="#" class="name-link">Barbara Dean</a><span class="email">barbara.dean@email.com</span></div>
+          </div>
+        </td>
+        <td><span class="kq-badge kq-2">68</span></td>
+        <td class="num">70</td><td class="num">69</td><td class="num">65</td>
+        <td class="date">06/05/2025</td>
+        <td class="top-action">Hobby goal disconnected from financial vision; needs goal reframe session</td>
+        <td><button class="bolt-btn" data-tip="Convert Barbara Dean"><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="13,2 3,14 12,14 11,22 21,10 12,10"/></svg></button></td>
+        <td><button class="kebab">⋯</button></td>
+      </tr>
+      <tr>
+        <td><span class="check"></span></td>
+        <td>
+          <div class="name-cell">
+            <div class="avatar">S</div>
+            <div class="name-text"><a href="#" class="name-link">Sophie Dean</a><span class="email">sophie.dean@email.com</span></div>
+          </div>
+        </td>
+        <td><span class="kq-badge kq-2">62</span></td>
+        <td class="num">60</td><td class="num">64</td><td class="num">62</td>
+        <td class="date">06/05/2025</td>
+        <td class="top-action">Travel urgency but self-directed; send value-add travel planning content</td>
+        <td><button class="bolt-btn" data-tip="Convert Sophie Dean"><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="13,2 3,14 12,14 11,22 21,10 12,10"/></svg></button></td>
+        <td><button class="kebab">⋯</button></td>
+      </tr>
+      <tr>
+        <td><span class="check"></span></td>
+        <td>
+          <div class="name-cell">
+            <div class="avatar">S</div>
+            <div class="name-text"><a href="#" class="name-link">Sebastian Watson</a><span class="email">sebastian.watson@email.com</span></div>
+          </div>
+        </td>
+        <td><span class="kq-badge kq-2">58</span></td>
+        <td class="num">55</td><td class="num">60</td><td class="num">59</td>
+        <td class="date">06/05/2025</td>
+        <td class="top-action">Grandkids focus; not thinking about goal; re-engage with legacy content</td>
+        <td><button class="bolt-btn" data-tip="Convert Sebastian Watson"><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="13,2 3,14 12,14 11,22 21,10 12,10"/></svg></button></td>
+        <td><button class="kebab">⋯</button></td>
+      </tr>
+      <tr>
+        <td><span class="check"></span></td>
+        <td>
+          <div class="name-cell">
+            <div class="avatar">M</div>
+            <div class="name-text"><a href="#" class="name-link">Miles Watson</a><span class="email">miles.watson@email.com</span></div>
+          </div>
+        </td>
+        <td><span class="kq-badge kq-2">49</span></td>
+        <td class="num">48</td><td class="num">52</td><td class="num">47</td>
+        <td class="date">06/05/2025</td>
+        <td class="top-action">Goal driven by partner; involve both partners; relationship-based outreach</td>
+        <td><button class="bolt-btn" data-tip="Convert Miles Watson"><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="13,2 3,14 12,14 11,22 21,10 12,10"/></svg></button></td>
+        <td><button class="kebab">⋯</button></td>
+      </tr>
+      <tr>
+        <td><span class="check"></span></td>
+        <td>
+          <div class="name-cell">
+            <div class="avatar">M</div>
+            <div class="name-text"><a href="#" class="name-link">Maya Watson</a><span class="email">maya.watson@email.com</span></div>
+          </div>
+        </td>
+        <td><span class="kq-badge kq-2">42</span></td>
+        <td class="num">40</td><td class="num">45</td><td class="num">41</td>
+        <td class="date">06/05/2025</td>
+        <td class="top-action">Very terse responses; minimal engagement; low-touch nurture sequence</td>
+        <td><button class="bolt-btn" data-tip="Convert Maya Watson"><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="13,2 3,14 12,14 11,22 21,10 12,10"/></svg></button></td>
+        <td><button class="kebab">⋯</button></td>
+      </tr>
+
+      <!-- TIER 3 -->
+      <tr class="tier-row tier-3"><td colspan="10">TIER 3 — NURTURE <span class="tier-meta">0-39 KQ</span></td></tr>
+      <tr>
+        <td><span class="check"></span></td>
+        <td>
+          <div class="name-cell">
+            <div class="avatar">E</div>
+            <div class="name-text"><a href="#" class="name-link">Emily Watson</a><span class="email">emily.watson@email.com</span></div>
+          </div>
+        </td>
+        <td><span class="kq-badge kq-3">35</span></td>
+        <td class="num">35</td><td class="num">38</td><td class="num">32</td>
+        <td class="date">06/05/2025</td>
+        <td class="top-action">Hobby-only focus; minimal urgency; quarterly light-touch check-in</td>
+        <td><button class="bolt-btn" data-tip="Convert Emily Watson"><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="13,2 3,14 12,14 11,22 21,10 12,10"/></svg></button></td>
+        <td><button class="kebab">⋯</button></td>
+      </tr>
+      <tr>
+        <td><span class="check"></span></td>
+        <td>
+          <div class="name-cell">
+            <div class="avatar">D</div>
+            <div class="name-text"><a href="#" class="name-link">David Watson</a><span class="email">david.watson@email.com</span></div>
+          </div>
+        </td>
+        <td><span class="kq-badge kq-3">28</span></td>
+        <td class="num">30</td><td class="num">25</td><td class="num">25</td>
+        <td class="date">06/05/2025</td>
+        <td class="top-action">Financial reward only; thin Future You; send financial education series</td>
+        <td><button class="bolt-btn" data-tip="Convert David Watson"><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="13,2 3,14 12,14 11,22 21,10 12,10"/></svg></button></td>
+        <td><button class="kebab">⋯</button></td>
+      </tr>
+      <tr>
+        <td><span class="check"></span></td>
+        <td>
+          <div class="name-cell">
+            <div class="avatar">J</div>
+            <div class="name-text"><a href="#" class="name-link">Janet Murphy</a><span class="email">janet.murphy@email.com</span></div>
+          </div>
+        </td>
+        <td><span class="kq-badge kq-3">28</span></td>
+        <td class="num">30</td><td class="num">25</td><td class="num">25</td>
+        <td class="date">06/05/2025</td>
+        <td class="top-action">Financial reward only; thin Future You; send financial education series</td>
+        <td><button class="bolt-btn" data-tip="Convert Janet Murphy"><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="13,2 3,14 12,14 11,22 21,10 12,10"/></svg></button></td>
+        <td><button class="kebab">⋯</button></td>
+      </tr>
+
+      <!-- INCOMPLETE -->
+      <tr class="tier-row incomplete"><td colspan="10">INCOMPLETE PROFILES</td></tr>
+      <tr>
+        <td><span class="check"></span></td>
+        <td>
+          <div class="name-cell">
+            <div class="avatar">E</div>
+            <div class="name-text"><a href="#" class="name-link">Anna Abbot</a><span class="email">anna.abbot@beaconplan.co</span></div>
+          </div>
+        </td>
+        <td><span class="num" style="color:var(--ash)">—</span></td>
+        <td></td><td></td><td></td>
+        <td class="last-invited"><span>Last invited:</span><b>06/05/2025</b></td>
+        <td class="top-action">Complete Knomee Prospect flow.</td>
+        <td><button class="bolt-btn disabled" aria-label="Disabled"><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="13,2 3,14 12,14 11,22 21,10 12,10"/></svg></button></td>
+        <td><button class="kebab">⋯</button></td>
+      </tr>
+    </tbody>
+  </table>
+</main>
+
+<!-- Convert Modal -->
+<div class="modal-backdrop" id="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+  <div class="modal">
+    <div class="modal-header">
+      <h2 class="modal-title" id="modal-title">Convert to Client</h2>
+      <button class="modal-close" aria-label="Close" data-close>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <b>Sarah Mitchell</b> will be sent to your <b>Clients</b> Dashboard.
+    </div>
+    <div class="modal-footer">
+      <button class="btn" data-close>Cancel</button>
+      <button class="btn btn-primary" id="confirm-convert">Convert</button>
     </div>
   </div>
 </div>
 
-<button class="hint-toggle" id="hint-toggle" title="Toggle hotspot highlights (H)">Show hotspot</button>
+<div class="toast" id="toast">
+  <span class="toast-check">✓</span>
+  <span>Converted to Client</span>
+</div>
 
 <script>
   const modal = document.getElementById('modal');
-  const bolt  = document.getElementById('bolt');
+  const toast = document.getElementById('toast');
 
-  function openModal() { modal.classList.add('open'); modal.setAttribute('aria-hidden','false'); }
-  function closeModal(){ modal.classList.remove('open'); modal.setAttribute('aria-hidden','true'); }
+  function openModal()  { modal.classList.add('open'); }
+  function closeModal() { modal.classList.remove('open'); }
 
-  bolt.addEventListener('click', e => { e.preventDefault(); openModal(); });
+  document.getElementById('convert-sarah').addEventListener('click', openModal);
 
-  // Any element marked data-close (Cancel / Convert), or the X, or backdrop click closes the modal
   modal.addEventListener('click', e => {
-    if (e.target === modal) { closeModal(); return; }
-    if (e.target.closest('[data-close]') || e.target.id === 'modal-close') {
-      e.preventDefault(); closeModal();
-    }
+    if (e.target === modal || e.target.closest('[data-close]')) closeModal();
   });
 
-  document.addEventListener('keydown', e => {
-    if (e.key === 'Escape') closeModal();
-    if (e.key === 'h' || e.key === 'H') document.getElementById('hint-toggle').click();
+  document.getElementById('confirm-convert').addEventListener('click', () => {
+    closeModal();
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 2400);
   });
 
-  document.getElementById('hint-toggle').addEventListener('click', () => {
-    const on = document.body.classList.toggle('hint');
-    document.getElementById('hint-toggle').textContent = on ? 'Hide hotspot' : 'Show hotspot';
-  });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
 </script>
 </body>
 </html>
