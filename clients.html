@@ -33,6 +33,12 @@
     background:var(--purple-100); color:var(--white);
     padding:16px 24px;
     display:flex; align-items:center; justify-content:space-between;
+    position:relative;
+  }
+  .nav-label {
+    position:absolute; left:50%; transform:translateX(-50%);
+    font-size:11px; font-weight:400; color:rgba(255,255,255,.65);
+    letter-spacing:.5px; pointer-events:none;
   }
   .brand { display:flex; align-items:center; gap:6px; }
   .brand-wordmark { height:23px; width:126px; object-fit:contain; object-position:left center; flex-shrink:0; display:block; }
@@ -204,6 +210,7 @@
     <img class="brand-wordmark" src="https://www.figma.com/api/mcp/asset/92986684-82df-424e-b9b0-032d55be72ac" alt="knomee">
     <span class="accent">ADVISOR</span>
   </div>
+  <span class="nav-label">Convert to Client</span>
   <button class="hamburger-btn" aria-label="Menu">
     <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
   </button>
