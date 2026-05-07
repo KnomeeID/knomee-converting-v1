@@ -622,6 +622,8 @@
     if (inIncomplete) return;
     const avatar = tr.querySelector('.avatar');
     if (!avatar) return;
+    const name = tr.querySelector('.name-link');
+    if (name && /Sarah Mitchell|Maya Gomez/.test(name.textContent)) return;
     const wrap = document.createElement('div');
     wrap.className = 'avatar-wrap';
     avatar.parentNode.insertBefore(wrap, avatar);
