@@ -206,6 +206,13 @@
   @media (max-width:1200px) {
     .page { padding-left:24px; padding-right:24px; }
   }
+  /* Search row: stack buttons below search on narrow screens */
+  @media (max-width:640px) {
+    .search-row { flex-wrap:wrap; }
+    .search-input { max-width:100%; width:100%; }
+    .actions-right { width:100%; margin-left:0; }
+    .actions-right .btn { flex:1; justify-content:center; }
+  }
   /* Step 1: hide Last Sign In */
   @media (max-width:1024px) {
     .data-table th:nth-child(6),.data-table td:nth-child(6) { display:none; }
